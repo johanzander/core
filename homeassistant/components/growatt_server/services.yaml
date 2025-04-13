@@ -31,3 +31,6 @@ update_tlx_inverter_time_segment:
       selector:
         boolean:
       example: true
+
+read_tlx_inverter_time_segments:
+  fields: {}

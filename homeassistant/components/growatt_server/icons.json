@@ -2,6 +2,9 @@
   "services": {
     "update_tlx_inverter_time_segment": {
       "service": "mdi:update"
+    },
+    "read_tlx_inverter_time_segments": {
+      "service": "mdi:clock-time-eight-outline"
     }
   }
 }

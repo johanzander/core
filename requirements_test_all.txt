@@ -913,9 +913,6 @@ greeneye_monitor==3.0.3
 # homeassistant.components.pure_energie
 gridnet==5.0.1
 
-# homeassistant.components.growatt_server
-growattServer==1.6.0
-
 # homeassistant.components.google_sheets
 gspread==5.5.0
 

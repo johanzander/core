@@ -5,9 +5,19 @@
       "no_plants": "No plants have been found on this account"
     },
     "error": {
-      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]"
+      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+      "connection_error": "Failed to connect. Please check your internet connection.",
+      "device_list_error": "Failed to retrieve device list. Please check your token and try again.",
+      "no_min_tlx_devices": "Token authentication only supports MIN/TLX devices. No compatible devices found in your account. Please use username/password authentication instead."
     },
     "step": {
+      "auth_type": {
+        "data": {
+          "auth_type": "Authentication Method"
+        },
+        "title": "Choose authentication method",
+        "description": "Token authentication only supports MIN/TLX devices. For other device types, please use username/password authentication."
+      },
       "plant": {
         "data": {
           "plant_id": "Plant"
@@ -19,7 +29,8 @@
           "name": "[%key:common::config_flow::data::name%]",
           "password": "[%key:common::config_flow::data::password%]",
           "username": "[%key:common::config_flow::data::username%]",
-          "url": "[%key:common::config_flow::data::url%]"
+          "url": "[%key:common::config_flow::data::url%]",
+          "token": "API Token"
         },
         "title": "Enter your Growatt information"
       }
@@ -286,11 +297,11 @@
       "tlx_energy_total": {
         "name": "[%key:component::growatt_server::entity::sensor::inverter_energy_total::name%]"
       },
-      "tlx_energy_total_input_1": {
-        "name": "Lifetime total energy input 1"
+      "tlx_solar_generation_total_input_1": {
+        "name": "Lifetime solar production Input 1"
       },
-      "tlx_energy_today_input_1": {
-        "name": "Energy Today Input 1"
+      "tlx_solar_generation_today_input_1": {
+        "name": "Solar production today Input 1"
       },
       "tlx_voltage_input_1": {
         "name": "[%key:component::growatt_server::entity::sensor::inverter_voltage_input_1::name%]"
@@ -301,11 +312,11 @@
       "tlx_wattage_input_1": {
         "name": "[%key:component::growatt_server::entity::sensor::inverter_wattage_input_1::name%]"
       },
-      "tlx_energy_total_input_2": {
-        "name": "Lifetime total energy input 2"
+      "tlx_solar_generation_total_input_2": {
+        "name": "Lifetime solar production Input 2"
       },
-      "tlx_energy_today_input_2": {
-        "name": "Energy Today Input 2"
+      "tlx_solar_generation_today_input_2": {
+        "name": "Solar production today Input 2"
       },
       "tlx_voltage_input_2": {
         "name": "[%key:component::growatt_server::entity::sensor::inverter_voltage_input_2::name%]"
@@ -316,11 +327,11 @@
       "tlx_wattage_input_2": {
         "name": "[%key:component::growatt_server::entity::sensor::inverter_wattage_input_2::name%]"
       },
-      "tlx_energy_total_input_3": {
-        "name": "Lifetime total energy input 3"
+      "tlx_solar_generation_total_input_3": {
+        "name": "Lifetime solar production Input 3"
       },
-      "tlx_energy_today_input_3": {
-        "name": "Energy Today Input 3"
+      "tlx_solar_generation_today_input_3": {
+        "name": "Solar production today Input 3"
       },
       "tlx_voltage_input_3": {
         "name": "[%key:component::growatt_server::entity::sensor::inverter_voltage_input_3::name%]"
@@ -331,11 +342,11 @@
       "tlx_wattage_input_3": {
         "name": "[%key:component::growatt_server::entity::sensor::inverter_wattage_input_3::name%]"
       },
-      "tlx_energy_total_input_4": {
-        "name": "Lifetime total energy input 4"
+      "tlx_solar_generation_total_input_4": {
+        "name": "Lifetime solar production Input 4"
       },
-      "tlx_energy_today_input_4": {
-        "name": "Energy Today Input 4"
+      "tlx_solar_generation_today_input_4": {
+        "name": "Solar production today Input 4"
       },
       "tlx_voltage_input_4": {
         "name": "Input 4 voltage"
@@ -547,6 +558,10 @@
           "description": "Whether the segment is enabled (true/false)."
         }
       }
+    },
+    "read_tlx_inverter_time_segments": {
+      "name": "Read TLX Inverter Time Segments",
+      "description": "Read all time segments from a TLX/MIN inverter."
     }
   }
 }
