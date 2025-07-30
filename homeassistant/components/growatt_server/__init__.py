@@ -28,6 +28,8 @@ def get_device_list_classic(
 ) -> tuple[list[dict[str, str]], str]:
     """Device list logic for classic API."""
     plant_id = config[CONF_PLANT_ID]
+
+    # Log in to api and fetch first plant if no plant id is defined.
     login_response = api.login(config[CONF_USERNAME], config[CONF_PASSWORD])
     if (
         not login_response["success"]
@@ -38,6 +40,8 @@ def get_device_list_classic(
     if plant_id == DEFAULT_PLANT_ID:
         plant_info = api.plant_list(user_id)
         plant_id = plant_info["data"][0]["plantId"]
+
+    # Get a list of devices for specified plant to add sensors for.
     devices = api.device_list(plant_id)
     return devices, plant_id
 
@@ -45,7 +49,12 @@ def get_device_list_classic(
 def get_device_list_v1(
     api, config: Mapping[str, str]
 ) -> tuple[list[dict[str, str]], str]:
-    """Device list logic for Open API V1."""
+    """Device list logic for Open API V1.
+
+    Note: Plant selection (including auto-selection if only one plant exists)
+    is handled in the config flow before this function is called. This function
+    only fetches devices for the already-selected plant_id.
+    """
     plant_id = config[CONF_PLANT_ID]
     try:
         devices_dict = api.device_list(plant_id)

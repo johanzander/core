@@ -113,7 +113,7 @@ class GrowattCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 min_info = {**min_details, **min_settings, **min_energy}
 
                 self.data = min_info
-                _LOGGER.debug("tlx_info for device %s: %r", self.device_id, min_info)
+                _LOGGER.debug("min_info for device %s: %r", self.device_id, min_info)
             else:
                 # Classic API: use tlx_detail
                 tlx_info = self.api.tlx_detail(self.device_id)
