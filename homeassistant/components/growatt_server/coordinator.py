@@ -87,19 +87,10 @@ class GrowattCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 # todayEnergy -> today_energy
                 # totalEnergy -> total_energy
                 # invTodayPpv -> current_power
-                #                details = self.api.plant_details(self.plant_id)
-                overview = self.api.plant_energy_overview(self.plant_id)
-                #                history = self.api.plant_energy_history(self.plant_id)
-                total_info = {
-                    #                    **details,
-                    **overview,
-                    #                   **history,
-                }
+                total_info = self.api.plant_energy_overview(self.plant_id)
                 total_info["todayEnergy"] = total_info["today_energy"]
                 total_info["totalEnergy"] = total_info["total_energy"]
                 total_info["invTodayPpv"] = total_info["current_power"]
-                self.data = total_info
-                _LOGGER.debug("Total info for plant %s: %r", self.plant_id, total_info)
             else:
                 # Classic API: use plant_info as before
                 total_info = self.api.plant_info(self.device_id)
@@ -107,8 +98,8 @@ class GrowattCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 plant_money_text, currency = total_info["plantMoneyText"].split("/")
                 total_info["plantMoneyText"] = plant_money_text
                 total_info["currency"] = currency
-                _LOGGER.debug("Total info for plant %s: %r", self.plant_id, total_info)
-                self.data = total_info
+            _LOGGER.debug("Total info for plant %s: %r", self.plant_id, total_info)
+            self.data = total_info
         elif self.device_type == "inverter":
             self.data = self.api.inverter_detail(self.device_id)
         elif self.device_type == "tlx":
