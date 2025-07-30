@@ -73,6 +73,8 @@ class GrowattCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     def _sync_update_data(self) -> dict[str, Any]:
         """Update data via library synchronously."""
+        _LOGGER.debug("Updating data for %s (%s)", self.device_id, self.device_type)
+
         # login only required for classic API
         if self.api_version == "classic":
             self.api.login(self.username, self.password)
