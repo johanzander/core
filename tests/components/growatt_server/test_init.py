@@ -174,3 +174,74 @@ async def test_multiple_devices_discovered(
     assert device1 == snapshot(name="device_min123456")
     assert device2 is not None
     assert device2 == snapshot(name="device_min789012")
+
+
+async def test_migration_legacy_token_config_entry(
+    hass: HomeAssistant,
+    mock_growatt_v1_api,
+) -> None:
+    """Test migration of legacy config entry without CONF_AUTH_TYPE (token auth)."""
+    from homeassistant.components.growatt_server.const import (
+        AUTH_API_TOKEN,
+        CONF_AUTH_TYPE,
+        CONF_PLANT_ID,
+    )
+    from homeassistant.const import CONF_TOKEN, CONF_URL
+
+    # Create a legacy config entry without CONF_AUTH_TYPE (but has CONF_TOKEN)
+    legacy_config_entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            CONF_TOKEN: "test_token_123",
+            CONF_URL: "https://openapi.growatt.com/",
+            "user_id": "12345",
+            CONF_PLANT_ID: "plant_123",
+            "name": "Test Plant",
+        },
+        unique_id="plant_123",
+    )
+
+    await setup_integration(hass, legacy_config_entry)
+
+    # Verify the config entry was migrated with CONF_AUTH_TYPE
+    assert legacy_config_entry.state is ConfigEntryState.LOADED
+    assert CONF_AUTH_TYPE in legacy_config_entry.data
+    assert legacy_config_entry.data[CONF_AUTH_TYPE] == AUTH_API_TOKEN
+
+
+async def test_migration_legacy_password_config_entry(
+    hass: HomeAssistant,
+    mock_growatt_classic_api,
+) -> None:
+    """Test migration of legacy config entry without CONF_AUTH_TYPE (password auth)."""
+    from homeassistant.components.growatt_server.const import (
+        AUTH_PASSWORD,
+        CONF_AUTH_TYPE,
+        CONF_PLANT_ID,
+    )
+    from homeassistant.const import CONF_PASSWORD, CONF_URL, CONF_USERNAME
+
+    # Create a legacy config entry without CONF_AUTH_TYPE (but has username/password)
+    legacy_config_entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={
+            CONF_USERNAME: "test_user",
+            CONF_PASSWORD: "test_password",
+            CONF_URL: "https://openapi.growatt.com/",
+            CONF_PLANT_ID: "12345",
+            "name": "Test Plant",
+        },
+        unique_id="12345",
+    )
+
+    # Classic API needs TLX device type for test
+    mock_growatt_classic_api.device_list.return_value = [
+        {"deviceSn": "TLX123456", "deviceType": "tlx"}
+    ]
+
+    await setup_integration(hass, legacy_config_entry)
+
+    # Verify the config entry was migrated with CONF_AUTH_TYPE
+    assert legacy_config_entry.state is ConfigEntryState.LOADED
+    assert CONF_AUTH_TYPE in legacy_config_entry.data
+    assert legacy_config_entry.data[CONF_AUTH_TYPE] == AUTH_PASSWORD
