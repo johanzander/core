@@ -3,6 +3,7 @@
 # 2. Remove _LOGGER.error calls in coordinator.py when raising UpdateFailed (choose one, not both)
 # 3. Update server URL dropdown to show regional descriptions (e.g., 'China', 'United States') instead of raw URLs
 # 4. Add serial_number field to DeviceInfo in sensor, number, and switch platforms using device_id/serial_id
+# 5. Replace custom precision field with suggested_display_precision to preserve full data granularity
 
 rules:
   # Bronze
