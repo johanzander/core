@@ -1,3 +1,6 @@
+# Code improvements from PR review feedback:
+# 1. Replace bare Exception catches in __init__.py with specific growattServer exceptions
+
 rules:
   # Bronze
   action-setup:
