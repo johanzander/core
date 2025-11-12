@@ -1,0 +1,53 @@
+rules:
+  # Bronze
+  action-setup:
+    status: exempt
+    comment: |
+      Integration does not register custom service actions.
+  appropriate-polling: done
+  brands: done
+  common-modules: done
+  config-flow-test-coverage: done
+  config-flow: done
+  dependency-transparency: done
+  docs-actions:
+    status: exempt
+    comment: |
+      No custom actions are defined.
+  docs-high-level-description: done
+  docs-installation-instructions: done
+  docs-removal-instructions: done
+  entity-event-setup:
+    status: exempt
+    comment: |
+      No explicit event subscriptions.
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data: done
+  test-before-configure: done
+  test-before-setup: done
+  unique-config-entry: done
+
+  # Silver
+  action-exceptions: done
+  config-entry-unloading: done
+  docs-configuration-parameters:
+    status: todo
+    comment: |
+      TODO: Add configuration parameters documentation.
+  docs-installation-parameters: done
+  entity-unavailable:
+    status: todo
+    comment: |
+      TODO: Implement entity unavailability handling.
+  integration-owner: done
+  log-when-unavailable:
+    status: todo
+    comment: |
+      TODO: Implement log-when-unavailable pattern.
+  parallel-updates: done
+  reauthentication-flow:
+    status: todo
+    comment: |
+      TODO: Implement reauthentication flow.
+  test-coverage: done
