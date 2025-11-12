@@ -1,5 +1,6 @@
 # Code improvements from PR review feedback:
 # 1. Replace bare Exception catches in __init__.py with specific growattServer exceptions
+# 2. Remove _LOGGER.error calls in coordinator.py when raising UpdateFailed (choose one, not both)
 
 rules:
   # Bronze
