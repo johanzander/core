@@ -34,8 +34,18 @@ rules:
   # Gold
   devices: done
   diagnostics: todo
-  discovery-update-info: todo
-  discovery: todo
+  discovery-update-info:
+    status: exempt
+    comment: >-
+      Growatt is a cloud polling integration. Devices communicate via
+      Growatt's cloud servers and have no local network presence that
+      would need connection-info updates.
+  discovery:
+    status: exempt
+    comment: >-
+      Growatt is a cloud polling integration. Users authenticate against
+      Growatt's cloud servers; there are no local devices to discover via
+      mDNS, SSDP, DHCP, Bluetooth, or any other local discovery protocol.
   docs-data-update: todo
   docs-examples: todo
   docs-known-limitations: todo
