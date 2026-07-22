@@ -4,6 +4,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
+from homeassistant.components.growatt_server import _MIGRATION_API_CACHE
 from homeassistant.components.growatt_server.const import (
     AUTH_API_TOKEN,
     AUTH_PASSWORD,
@@ -313,3 +314,16 @@ def mock_setup_entry():
         return_value=True,
     ) as mock:
         yield mock
+
+
+@pytest.fixture(autouse=True)
+def clear_migration_api_cache():
+    """Clear the migration API cache between tests.
+
+    The cache is module-level state that is normally drained by
+    async_setup_entry. Tests that run a migration without a following setup
+    would otherwise leak an entry into subsequent tests.
+    """
+    _MIGRATION_API_CACHE.clear()
+    yield
+    _MIGRATION_API_CACHE.clear()

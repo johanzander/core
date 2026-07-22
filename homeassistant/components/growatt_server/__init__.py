@@ -16,7 +16,6 @@ from homeassistant.helpers.typing import ConfigType
 from .const import (
     AUTH_API_TOKEN,
     AUTH_PASSWORD,
-    CACHED_API_KEY,
     CONF_AUTH_TYPE,
     CONF_PLANT_ID,
     DEFAULT_PLANT_ID,
@@ -33,6 +32,14 @@ from .services import async_setup_services
 _LOGGER = logging.getLogger(__name__)
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+# Authenticated Classic API instances handed over from async_migrate_entry to
+# async_setup_entry, keyed by config entry ID. Entries are written only by the
+# migration and are always popped by the following setup, so this never holds
+# more than the entries currently being migrated. Runtime state belongs in
+# ConfigEntry.runtime_data, but that is owned by the setup/unload lifecycle and
+# does not exist yet while a migration runs.
+_MIGRATION_API_CACHE: dict[str, growattServer.GrowattApi] = {}
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -158,8 +165,7 @@ async def async_migrate_entry(
                 )
 
                 # Cache the logged-in API instance for reuse in async_setup_entry()
-                hass.data.setdefault(DOMAIN, {})
-                hass.data[DOMAIN][f"{CACHED_API_KEY}{config_entry.entry_id}"] = api
+                _MIGRATION_API_CACHE[config_entry.entry_id] = api
 
                 _LOGGER.info(
                     "Migrated config entry to use specific plant_id '%s'",
@@ -259,6 +265,12 @@ async def async_setup_entry(
     config = config_entry.data
     url = config.get(CONF_URL, DEFAULT_URL)
 
+    # Check if migration cached an authenticated API instance for us to reuse.
+    # This avoids calling login() twice (once in migration, once here) which
+    # would trigger rate limiting. Always popped, so a cached instance is never
+    # left behind when setup takes a path that cannot use it.
+    cached_api = _MIGRATION_API_CACHE.pop(config_entry.entry_id, None)
+
     # If the URL has been deprecated then change to the default instead
     if url in DEPRECATED_URLS:
         url = DEFAULT_URL
@@ -279,13 +291,6 @@ async def async_setup_entry(
         # Classic API (username/password with login)
         username = config[CONF_USERNAME]
         password = config[CONF_PASSWORD]
-
-        # Check if migration cached an authenticated API instance for us to reuse.
-        # This avoids calling login() twice (once in migration, once here) which
-        # would trigger rate limiting.
-        cached_api = hass.data.get(DOMAIN, {}).pop(
-            f"{CACHED_API_KEY}{config_entry.entry_id}", None
-        )
 
         if cached_api:
             # Reuse the logged-in API instance from migration (rate limit optimization)
